@@ -64,6 +64,27 @@ public function user($id = null)
         }
     }
 
+    // METHOD PUT 
+    elseif ($id != null && $_SERVER['REQUEST_METHOD'] == 'PUT') 
+    {
+        $data = json_decode(file_get_contents('php://input'));
+
+        if ($id_token = $this->check_token()) 
+        {
+            if ($id_token == $id) 
+            {
+                return $this->response($this->user->update($id, $data));
+            }
+            else
+            {
+                return $this->response([
+                    'success' => false,
+                    'message' => 'user tidak bisa menghapus akun dari id lain',
+                ]);
+            }
+        }
+    }
+
     else
     {
         return $this->response($this->user->store());
@@ -83,7 +104,7 @@ public function login()
         ]);
     }
 
-    $user               = $this->user->login($this->input->post('email'));
+    $user               = $this->user->get($this->input->post('id'));
     $payload['id']      = $user->id;
     $payload['email']   = $user->email;
     $payload['iat']     = $date->getTimestamp();

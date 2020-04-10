@@ -15,13 +15,6 @@ Class User extends CI_Model
     }
 
 
-    public function login($email)
-    {
-        $this->db->where('email', $email);
-        return $this->db->get('users')->row();
-    }
-
-
     public function store()
     {
     	// $data = $this->input->post();
@@ -34,17 +27,17 @@ Class User extends CI_Model
         if ($this->db->insert('users', $data)) 
         {
           return [
-             'id' 		=> $this->db->insert_id(),
-             'success' 	=> true,
-             'message' 	=> 'Data berhasil ditambahkan'
-         ];
-     }
+           'id' 		=> $this->db->insert_id(),
+           'success' 	=> true,
+           'message' 	=> 'Data berhasil ditambahkan'
+       ];
+   }
 
- }
+}
 
 
- public function is_valid()
- {
+public function is_valid()
+{
     $id         = $this->input->post('id');
     $password   = $this->input->post('password');
     $hash       = $this->get($id)->password;
@@ -64,6 +57,19 @@ public function delete($id)
         return [
             'success'   => true,
             'message'   => 'Data berhasil dihapus'
+        ];
+    }
+}
+
+
+public function update($id, $data)
+{
+    $this->db->where('id', $id);
+    if ( $this->db->update('users', $data)) 
+    {
+        return [
+            'success'   => true,
+            'message'   => 'Data berhasil diupdate'
         ];
     }
 }
